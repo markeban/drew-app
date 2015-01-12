@@ -31,7 +31,7 @@ require 'json'
 
 
 
-    headers = %w{actor_name object_id translated_event_type date_time_in_timezone placeholder}
+    headers = %w{placeholder actor_name object_id translated_event_type date_time_in_timezone}
     file_name = "drew_data"
 
     csv_file = CSV.generate do |csv|
