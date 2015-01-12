@@ -17,27 +17,20 @@ require 'json'
       api_calls[url.sub('placeholder', placeholder)] = placeholder
     end
     
-    api_calls.each do |url, placeholder|
-      json_data = Unirest.get(url).body
-      json_data.each do |key, array|
-        array.each do |hash|
-          hash["placeholder"] = placeholder
-          @json_and_placeholder.push(hash)
-        end
-      end
+    api_calls.each do |url|
+      json_data << Unirest.get(url).body
     end
 
 
 
 
 
-    headers = %w{placeholder actor_name object_id translated_event_type date_time_in_timezone}
+    # headers = %w{placeholder actor_name object_id translated_event_type date_time_in_timezone}
     file_name = "drew_data"
 
     csv_file = CSV.generate do |csv|
-      csv << headers
-      @json_and_placeholder.each do |hash|
-        csv << headers.map { |h| hash[h] }
+      JSON.parse(json_data.read).each do |hash| #open json to parse
+        csv << hash.values #write value to file
       end
     end
     send_data csv_file, :type => 'text/csv; charset=iso-8859-1; header=present', :disposition => "attachment;data=#{file_name}.csv"
